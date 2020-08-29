@@ -1,0 +1,17 @@
+# file: ansible-role-valgrind/meta/main.yml
+
+galaxy_info:
+  author: ros
+  company:
+  description: Install valgrind
+  min_ansible_version: 0.1
+  license: MIT
+  platforms:
+  - name: Centos
+    versions:
+    - all
+  categories:
+  - system
+
+# dependencies:
+#   - {role: ANXS.build-essential, tags: build-essential }

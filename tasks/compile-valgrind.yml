@@ -1,0 +1,44 @@
+
+- name: VALGRIND | clean tmp dir
+  file:
+    state: absent
+    path: "{{ tmp }}"
+
+- name: VALGRIND | clean build dir
+  file:
+    state: absent
+    path: "{{ build }}"
+
+- name: VALGRIND | Get sources
+  become: true
+  get_url: url={{url}} dest={{tmp}} timeout=180 force=no
+  register: valgrind_downloaded
+
+- name: VALGRIND | Extract sources
+  become: true
+  unarchive: src={{tmp}}
+             dest="/tmp"
+             creates={{build}}
+             remote_src=yes
+  when: valgrind_downloaded.changed
+
+- name: VALGRIND | Make build folder
+  become: true
+  file: path={{build_dir}} state=directory
+  when: valgrind_downloaded.changed
+
+- name: VALGRIND | Configure
+  become: true
+  shell: chdir={{build_dir}} {{build}}/configure \
+    --prefix={{install_dir}} \
+  when: valgrind_downloaded.changed
+
+- name: VALGRIND | Make
+  become: true
+  shell: chdir={{build_dir}} make
+  when: valgrind_downloaded.changed
+
+- name: VALGRIND | Install
+  become: true
+  shell: chdir={{build_dir}} make install
+  when: valgrind_downloaded.changed
