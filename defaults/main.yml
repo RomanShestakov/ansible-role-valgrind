@@ -4,7 +4,7 @@
 name: valgrind
 version: 3.16.1
 url: https://sourceware.org/pub/{{name}}/{{name}}-{{version}}.tar.bz2
-tmp: "/tmp/{{name}}-{{version}}.tar.gz"
+tmp: "/tmp/{{name}}-{{version}}.tar.bz2"
 build: "/tmp/{{name}}-{{version}}"
 build_dir: "/tmp/{{name}}-{{version}}-build"
 install_dir: "/opt/{{name}}-{{version}}"
