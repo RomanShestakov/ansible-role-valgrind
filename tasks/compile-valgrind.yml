@@ -1,13 +1,14 @@
+---
 
-- name: VALGRIND | clean tmp dir
-  file:
-    state: absent
-    path: "{{ tmp }}"
+# - name: VALGRIND | clean tmp dir
+#   file:
+#     state: absent
+#     path: "{{ tmp }}"
 
-- name: VALGRIND | clean build dir
-  file:
-    state: absent
-    path: "{{ build }}"
+# - name: VALGRIND | clean build dir
+#   file:
+#     state: absent
+#     path: "{{ build }}"
 
 - name: VALGRIND | Get sources
   become: true
