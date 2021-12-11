@@ -12,7 +12,7 @@
 
 - name: VALGRIND | Get sources
   become: true
-  get_url: url={{url}} dest={{tmp}} timeout=180 force=no
+  get_url: url={{url}} dest={{tmp}} timeout=180 force=no validate_certs=no
   register: valgrind_downloaded
 
 - name: VALGRIND | Extract sources
