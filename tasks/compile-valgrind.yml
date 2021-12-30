@@ -49,6 +49,7 @@
   become: true
   shell: chdir={{valgrind_build_dir}} make install
   when: valgrind_downloaded.changed
+  register: valgrind_install
 
 - name: VALGRIND | cleanup build
   become: true
