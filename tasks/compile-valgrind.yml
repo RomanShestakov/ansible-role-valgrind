@@ -10,36 +10,64 @@
 #     state: absent
 #     path: "{{ build }}"
 
+- name: VALGRIND | check if VALGRIND is already installed
+  stat:
+    path: "{{ valgrind_install_dir }}"
+  register: valgrind_exists
+
 - name: VALGRIND | Get sources
   become: true
-  get_url: url={{url}} dest={{tmp}} timeout=180 force=no
+  get_url: url={{valgrind_url}} dest={{valgrind_tmp}} timeout=180 force=no
+  when: not valgrind_exists.stat.exists
   register: valgrind_downloaded
 
 - name: VALGRIND | Extract sources
   become: true
-  unarchive: src={{tmp}}
+  unarchive: src={{valgrind_tmp}}
              dest="/tmp"
-             creates={{build}}
+             creates={{valgrind_build}}
              remote_src=yes
   when: valgrind_downloaded.changed
 
 - name: VALGRIND | Make build folder
   become: true
-  file: path={{build_dir}} state=directory
+  file: path={{valgrind_build_dir}} state=directory
   when: valgrind_downloaded.changed
 
 - name: VALGRIND | Configure
   become: true
-  shell: chdir={{build_dir}} {{build}}/configure \
-    --prefix={{install_dir}} \
+  shell: chdir={{valgrind_build_dir}} {{valgrind_build}}/configure \
+    --prefix={{valgrind_install_dir}} \
   when: valgrind_downloaded.changed
 
 - name: VALGRIND | Make
   become: true
-  shell: chdir={{build_dir}} make
+  shell: chdir={{valgrind_build_dir}} make
   when: valgrind_downloaded.changed
 
 - name: VALGRIND | Install
   become: true
-  shell: chdir={{build_dir}} make install
+  shell: chdir={{valgrind_build_dir}} make install
   when: valgrind_downloaded.changed
+
+- name: VALGRIND | cleanup build
+  become: true
+  file:
+    path: "{{ valgrind_build_dir }}"
+    state: absent
+  when: valgrind_install.changed
+
+- name: VALGRIND | cleanup tmp
+  become: true
+  file:
+    path: "{{ valgrind_tmp }}"
+    state: absent
+  when: valgrind_install.changed
+
+- name: VALGRIND | cleanup tmp
+  become: true
+  file:
+    path: "{{ valgrind_build }}"
+    state: absent
+  when: valgrind_install.changed
+...
