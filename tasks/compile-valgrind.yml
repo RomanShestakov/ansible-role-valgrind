@@ -25,7 +25,7 @@
   become: true
   unarchive: src={{valgrind_tmp}}
              dest="/tmp"
-             creates={{valgrind_build}}
+             creates={{valgrind_build_dir}}
              remote_src=yes
   when: valgrind_downloaded.changed
 
@@ -36,7 +36,7 @@
 
 - name: VALGRIND | Configure
   become: true
-  shell: chdir={{valgrind_build_dir}} {{valgrind_build}}/configure \
+  shell: chdir={{valgrind_build_dir}} {{valgrind_build_dir}}/configure \
     --prefix={{valgrind_install_dir}} \
   when: valgrind_downloaded.changed
 
@@ -68,7 +68,7 @@
 - name: VALGRIND | cleanup tmp
   become: true
   file:
-    path: "{{ valgrind_build }}"
+    path: "{{ valgrind_build_dir }}"
     state: absent
   when: valgrind_install.changed
 ...
